@@ -4,6 +4,7 @@ from faker import Faker
 
 fake = Faker()
 # front controller
+
 def secret_front(request):
     request['date'] = date.today()
 
