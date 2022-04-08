@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block menu %}
+      <div id="menubar">
+        <ul id="menu">
+          <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
+          <li><a href="/">Home</a></li>
+          <li><a href="examples">Examples</a></li>
+          <li><a href="about">About</a></li>
+          <li class="selected"><a href="courses">Courses</a></li>
+          <li><a href="contact">Contact Us</a></li>
+        </ul>
+      </div>
+{% endblock %}
+
+{% block body %}
+    <div id="site_content">
+      <div class="content">
+
+        <div>
+            <a href="/create-course/?id={{id}}">Создать новый курс</a>
+            <br>
+            <h1>Список курсов для категории "{{name}}"</h1>
+            {% for item in objects_list %}
+            <li>
+                {{item.name}} <span><a href="/copy-course/?name={{item.name}}">скопировать</a></span>
+            </li>
+            {% endfor %}
+        </div>
+
+      </div>
+
+    </div>
+{% endblock %}
+

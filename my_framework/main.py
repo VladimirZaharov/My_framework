@@ -1,3 +1,7 @@
+from quopri import decodestring
+
+from my_framework.requests import PostRequests, GetRequests
+
 
 class PageNotFound404:
     def __call__(self, request):
@@ -19,7 +23,6 @@ class Framework:
         # добавление закрывающего слеша
         if not path.endswith('/'):
             path = f'{path}/'
-        print(self.parse_data(environ))
         # находим нужный контроллер
         # отработка паттерна page controller
         if path in self.routes_lst:
@@ -27,9 +30,18 @@ class Framework:
         else:
             view = PageNotFound404()
         request = {}
-        # наполняем словарь request элементами
-        # этот словарь получат все контроллеры
-        # отработка паттерна front controller
+        method = environ['REQUEST_METHOD']
+        request['method'] = method
+        if method == 'POST':
+            data = PostRequests().get_request_params(environ)
+            request['data'] = Framework.decode_value(data)
+            print(f'Нам пришёл post-запрос: {Framework.decode_value(data)}')
+        if method == 'GET':
+            request_params = GetRequests().get_request_params(environ)
+            request['request_params'] = Framework.decode_value(request_params)
+            print(f'Нам пришли GET-параметры:'
+                  f' {Framework.decode_value(request_params)}')
+
         for front in self.fronts_lst:
             front(request)
         # запуск контроллера с передачей объекта request
@@ -37,12 +49,11 @@ class Framework:
         start_response(code, [('Content-Type', 'text/html')])
         return [body.encode('utf-8')]
 
-    def parse_data(self, env):
-        data_len = int(env['CONTENT_LENGTH']) if env['CONTENT_LENGTH'] else 0
-        data = env['wsgi.input'].read(data_len) if data_len > 0 else b''
-        data = data.decode('utf-8')
-        if data:
-            items = data.split('&')
-            dict_items = {item.split('=')[0]: item.split('=')[1] for item in items}
-            return dict_items
-        return 'no data'
+    @staticmethod
+    def decode_value(data):
+        new_data = {}
+        for k, v in data.items():
+            val = bytes(v.replace('%', '=').replace("+", " "), 'UTF-8')
+            val_decode_str = decodestring(val).decode('UTF-8')
+            new_data[k] = val_decode_str
+        return new_data

@@ -1,5 +1,5 @@
 from datetime import date
-from views import Index, About, Contacts, Examples
+from views import Index, About, Contacts, Examples, CoursesList, CreateCourse, CreateCategory, CopyCourse, CategoryList
 from faker import Faker
 
 fake = Faker()
@@ -19,6 +19,11 @@ fronts = [secret_front, other_front]
 routes = {
     '/': Index(),
     '/about/': About(),
+    '/courses/': CoursesList(),
     '/contact/': Contacts(),
-    '/examples/': Examples()
+    '/examples/': Examples(),
+    '/create-course/': CreateCourse(),
+    '/create-category/': CreateCategory(),
+    '/copy-course/': CopyCourse(),
+    '/category-list/': CategoryList(),
 }
