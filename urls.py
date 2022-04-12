@@ -20,7 +20,6 @@ routes = {
     '/': Index(),
     '/about/': About(),
     '/courses/': CoursesList(),
-    '/contact/': Contacts(),
     '/examples/': Examples(),
     '/create-course/': CreateCourse(),
     '/create-category/': CreateCategory(),

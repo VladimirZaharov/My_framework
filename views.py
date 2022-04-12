@@ -1,27 +1,31 @@
 from my_framework.templator import render
 from patterns.creation_pattern import Engine, Logger
-
+from patterns.structure_patterns import AppRouter, Debug
 
 site = Engine()
 logger = Logger('main')
 
 
 class Index:
+    @Debug
     def __call__(self, request):
         return '200 OK', render('index.html', date=request.get('date', None), names=request.get('names', None))
 
 
 class About:
+    @Debug
     def __call__(self, request):
         return '200 OK', render('another_page.html')
 
 
 class Examples:
+    @Debug
     def __call__(self, request):
         return '200 OK', render('examples.html')
 
-
+@AppRouter
 class Contacts:
+    @Debug
     def __call__(self, request):
         return '200 OK', render('contact.html')
 
@@ -115,6 +119,7 @@ class CategoryList:
 
 # контроллер - копировать курс
 class CopyCourse:
+    @Debug
     def __call__(self, request):
         request_params = request['request_params']
 
