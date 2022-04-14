@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block menu %}
+      <div id="menubar">
+        <ul id="menu">
+          <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
+          <li><a href="/">Home</a></li>
+          <li><a href="examples">Examples</a></li>
+          <li><a href="about">About</a></li>
+          <li><a href="courses">Courses</a></li>
+          <li><a href="students">Students</a></li>
+          <li><a href="contact">Contact Us</a></li>
+        </ul>
+      </div>
+{% endblock %}
+
+{% block body %}
+    <div id="site_content">
+      <div class="content">
+
+        <div>
+            <h1>Страница регистрации</h1>
+            <form method="post">
+                <p>Введите логин</p>
+                <input type="text" name="login" placeholder="Логин">
+                <br>
+                <p>Введите пароль</p>
+                <input type="text" name="password" placeholder="Пароль">
+                <br>
+                <p>Введите Ваше имя</p>
+                <input type="text" name="first_name" placeholder="Имя">
+                <br>
+                <p>Введите фамилию</p>
+                <input type="text" name="last_name" placeholder="Фамилия">
+                <button type="submit">Зарегистрироваться</button>
+            </form>
+        </div>
+
+      </div>
+
+    </div>
+{% endblock %}
+

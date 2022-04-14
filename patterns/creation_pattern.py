@@ -4,7 +4,12 @@ from quopri import decodestring
 
 # абстрактный пользователь
 class User:
-    pass
+    def __init__(self, first_name, last_name, login, user_password):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.login = login
+        self.user_password = user_password
+        self.courses = []
 
 
 # преподаватель
@@ -14,17 +19,25 @@ class Teacher(User):
 
 # студент
 class Student(User):
-    pass
+    auto_id = 0
+    
+    def __init__(self, first_name, last_name, login, user_password):
+        super().__init__(first_name, last_name, login, user_password)
+        self.id = Student.auto_id
+        Student.auto_id += 1
+        
+    def add_course(self, course):
+        self.courses.append(course)
 
 
 class UserFactory:
     @staticmethod
-    def create(type_):
+    def create(type_, first_name, last_name, login, password):
         types = {
             'student': Student,
             'teacher': Teacher
         }
-        return types[type_]()
+        return types[type_](first_name, last_name, login, password)
 
 
 # порождающий паттерн Прототип
@@ -90,8 +103,13 @@ class Engine:
         self.categories = []
 
     @staticmethod
-    def create_user(type_):
-        return UserFactory.create(type_)
+    def create_user(type_, first_name, last_name, login, password):
+        return UserFactory.create(type_, first_name, last_name, login, password)
+
+    def add_course_to_student(self, student_id, course):
+        for student in self.students:
+            if student_id == student.id:
+                student.add_course(course) 
 
     @staticmethod
     def create_category(name, category=None):
@@ -149,3 +167,11 @@ class Logger(metaclass=SingletonByName):
     @staticmethod
     def log(text):
         print('log--->', text)
+
+
+class FileLogger(Logger):
+
+    @staticmethod
+    def log(text):
+        with open('log.txt', 'a', encoding='utf-8') as l:
+            l.writelines(text)

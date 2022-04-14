@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block menu %}
+      <div id="menubar">
+        <ul id="menu">
+          <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
+          <li><a href="/">Home</a></li>
+          <li><a href="examples">Examples</a></li>
+          <li><a href="about">About</a></li>
+          <li><a href="courses">Courses</a></li>
+          <li><a href="students">Students</a></li>
+          <li><a href="contact">Contact Us</a></li>
+        </ul>
+      </div>
+{% endblock %}
+
+{% block body %}
+    <div id="site_content">
+      <div class="content">
+
+        <div>
+            <h1>Страница студента {{object.first_name}} {{object.last_name}}</h1>
+            <h3>Ваши курсы:</h3>
+            <ul>
+                {% if object.courses %}
+                {% for course in object.courses %}
+                <li>{{course}}</li>
+                {% endfor %}
+                {% else %}
+                <li>Вы не записаны ни на один курс</li>
+                {% endif %}
+            </ul>
+            <form method="post">
+                <p>Список курсов для записи:</p>
+                {% if objects_list %}
+                {% for course in objects_list %}
+               <p><input type="checkbox" name="courses_to_register" value="{{course}}"> {{course.name}}</p>
+                {% endfor %}
+               <p><input type="submit" value="add">Добавить курсы</p>
+                {% else %}
+                <p>Нет курсов для добавления</p>
+                {% endif %}
+            </form>
+        </div>
+
+      </div>
+
+    </div>
+{% endblock %}
+

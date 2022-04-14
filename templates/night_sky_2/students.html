@@ -7,8 +7,8 @@
           <li><a href="/">Home</a></li>
           <li><a href="examples">Examples</a></li>
           <li><a href="about">About</a></li>
-          <li class="selected"><a href="courses">Courses</a></li>
-          <li><a href="students">Students</a></li>
+          <li><a href="courses">Courses</a></li>
+          <li class="selected"><a href="students">Students</a></li>
           <li><a href="contact">Contact Us</a></li>
         </ul>
       </div>
@@ -19,14 +19,20 @@
       <div class="content">
 
         <div>
-            <a href="/create-course/?id={{id}}">Создать новый курс</a>
+            <a href="student-registration">Зарегистрироваться</a>
+            <a href="student-login">Войти</a>
+
             <br>
-            <h1>Список курсов для категории "{{name}}"</h1>
-            {% for item in objects_list %}
+            <h1>Список студентов</h1>
+            {% if objects_list %}
+            {% for student in objects_list %}
             <li>
-                {{item.name}} <span><a href="/copy-course/?name={{item.name}}">скопировать</a></span>
+                {{student.first_name}} {{student.last_name}}
             </li>
-            {% endfor %}
+             {% endfor %}
+            {% else %}
+            <h3>Пока не добавлено ни одного студента</h3>
+           {% endif %}
         </div>
 
       </div>

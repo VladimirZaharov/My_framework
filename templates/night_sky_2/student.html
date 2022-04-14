@@ -7,7 +7,7 @@
           <li><a href="/">Home</a></li>
           <li><a href="examples">Examples</a></li>
           <li><a href="about">About</a></li>
-          <li class="selected"><a href="courses">Courses</a></li>
+          <li><a href="courses">Courses</a></li>
           <li><a href="students">Students</a></li>
           <li><a href="contact">Contact Us</a></li>
         </ul>
@@ -19,14 +19,18 @@
       <div class="content">
 
         <div>
-            <a href="/create-course/?id={{id}}">Создать новый курс</a>
-            <br>
-            <h1>Список курсов для категории "{{name}}"</h1>
-            {% for item in objects_list %}
-            <li>
-                {{item.name}} <span><a href="/copy-course/?name={{item.name}}">скопировать</a></span>
-            </li>
-            {% endfor %}
+            <h1>Страница студента {{object.first_name}} {{object.last_name}}</h1>
+            <h3>Ваши курсы:</h3>
+            <ul>
+                {% if object.courses %}
+                {% for course in object.courses %}
+                <li>{{course}}</li>
+                {% endfor %}
+                {% else %}
+                <li>Вы не записаны ни на один курс</li>
+                {% endif %}
+                <a href="add-course-to-student/?id={{object.id}}">Записаться на курсы</a>
+            </ul>
         </div>
 
       </div>

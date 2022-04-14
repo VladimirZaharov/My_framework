@@ -1,6 +1,8 @@
 from datetime import date
-from views import Index, About, Contacts, Examples, CoursesList, CreateCourse, CreateCategory, CopyCourse, CategoryList
+from views import Index, About, Examples, CoursesList, CreateCourse, CreateCategory, CopyCourse, CategoryList
 from faker import Faker
+from views import decorator_routes
+
 
 fake = Faker()
 # front controller
@@ -26,3 +28,4 @@ routes = {
     '/copy-course/': CopyCourse(),
     '/category-list/': CategoryList(),
 }
+routes.update(decorator_routes)

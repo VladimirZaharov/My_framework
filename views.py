@@ -1,33 +1,90 @@
 from my_framework.templator import render
-from patterns.creation_pattern import Engine, Logger
+from patterns.creation_pattern import Engine, Logger, UserFactory
 from patterns.structure_patterns import AppRouter, Debug
+
 
 site = Engine()
 logger = Logger('main')
-
+decorator_routes = {}
 
 class Index:
-    @Debug
+    # @Debug
     def __call__(self, request):
         return '200 OK', render('index.html', date=request.get('date', None), names=request.get('names', None))
 
 
 class About:
-    @Debug
+    # @Debug
     def __call__(self, request):
         return '200 OK', render('another_page.html')
 
 
 class Examples:
-    @Debug
+    # @Debug
     def __call__(self, request):
         return '200 OK', render('examples.html')
 
-@AppRouter
+
+@AppRouter(route=decorator_routes, url='/contact/')
 class Contacts:
-    @Debug
+    # @Debug
     def __call__(self, request):
         return '200 OK', render('contact.html')
+
+
+@AppRouter(route=decorator_routes, url='/students/')
+class StudentsList:
+    def __call__(self, request):
+        logger.log('Список студентов')
+        return '200 OK', render('students.html', objects_list=site.students)
+
+
+@AppRouter(route=decorator_routes, url='/student-registration/')
+class CreateStudent:
+    def __call__(self, request):
+        if request['method'] == 'POST':
+            data = request['data']
+            first_name, last_name, login, password = data['first_name'], data['last_name'], data['login'], data['password']
+            student = site.create_user('student', first_name, last_name, login, password)
+            site.students.append(student)
+            return '200 OK', render('student.html', object=student, objects_list=site.courses)
+        else:
+            return '200 OK', render('student_registration.html')
+
+
+@AppRouter(route=decorator_routes, url='/student-login/')
+class LoginStudent:
+    def __call__(self, request):
+        if request['method'] == 'POST':
+            data = request['data']
+            login = data['login']
+            password = data['password']
+            login = site.decode_value(login)
+            password = site.decode_value(password)
+            for student in site.students:
+                if login == site.students.login:
+                    if password == site.students.password:
+                        return '200 OK', render('student.html', object=student, objects_list=site.courses)
+                return '200 OK', render('students.html')
+        else:
+            return '200 OK', render('student_login.html')
+
+
+@AppRouter(route=decorator_routes, url='/add-course-to-student/')
+class RegisterForCourse:
+    def __call__(self, request):
+        student_id = int(request['request_params']['id'])
+        for s in site.students:
+            if s.id == student_id:
+                if request['method'] == 'POST':
+                    data = request['data']
+                    courses = data['courses_to_register']
+                    for course in courses:
+                        if course not in s.courses:
+                            s.courses.append(course)
+                    return '200 OK', render('course_register.html', object=s, objects_list=site.courses)
+                else:
+                    return '200 OK', render('course_register.html', object=s, objects_list=site.courses)
 
 
 # контроллер - список курсов
@@ -119,7 +176,7 @@ class CategoryList:
 
 # контроллер - копировать курс
 class CopyCourse:
-    @Debug
+    # @Debug
     def __call__(self, request):
         request_params = request['request_params']
 
