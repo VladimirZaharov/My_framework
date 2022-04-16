@@ -1,11 +1,14 @@
 from my_framework.templator import render
-from patterns.creation_pattern import Engine, Logger, UserFactory
+from patterns.architectural_system_pattern_unit_of_work import UnitOfWork
+from patterns.creation_pattern import Engine, Logger, UserFactory, MapperRegistry
 from patterns.structure_patterns import AppRouter, Debug
 
 
 site = Engine()
 logger = Logger('main')
 decorator_routes = {}
+UnitOfWork.new_current()
+UnitOfWork.get_current().set_mapper_registry(MapperRegistry)
 
 class Index:
     # @Debug
@@ -47,6 +50,8 @@ class CreateStudent:
             first_name, last_name, login, password = data['first_name'], data['last_name'], data['login'], data['password']
             student = site.create_user('student', first_name, last_name, login, password)
             site.students.append(student)
+            student.mark_new()
+            UnitOfWork.get_current().commit()
             return '200 OK', render('student.html', object=student, objects_list=site.courses)
         else:
             return '200 OK', render('student_registration.html')
